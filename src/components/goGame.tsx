@@ -1,12 +1,12 @@
 import { ThreeEvent, useLoader } from "@react-three/fiber";
 import BoardFoot from "./boardFoot.tsx";
 import * as THREE from "three";
-import { Raycaster } from "three";
 import { useThree } from '@react-three/fiber';
 import GoStone from "./goStone.tsx";
 import GoStonePreview from "./goStonePreview.tsx";
 import GoBoard from "./goBoard.tsx";
 import { GoBoardState, CellState } from "../utils/goBoardState.ts";
+import useFixedYPositionConverter from "../utils/positionConverter.ts";
 import React, {
   useCallback,
   useEffect,
@@ -40,10 +40,12 @@ type GoGameProps = {
 };
 
 const GoGame: React.FC<GoGameProps> = ({ position, placingRef }) => {
+  const { camera } = useThree();
   const [stones, setStones] = useState<CellStoneBoard[]>([]);
   const [board] = useState(new GoBoardState());
   const [currStoneWorld, setCurrStoneWorld] =
     useState<CurrCellStoneWorld | null>(null);
+  const getPosition = useFixedYPositionConverter(2.1);
 
   const [topTexture, boardTexture] = useLoader(THREE.TextureLoader, [
     "/go-board.svg",
@@ -57,12 +59,13 @@ const GoGame: React.FC<GoGameProps> = ({ position, placingRef }) => {
   const handlePointerMove = useCallback(
     (e: ThreeEvent<PointerEvent>) => {
       console.log("handlePointerMove");
+    
+      const position = getPosition(e);
 
       // convert world position to board position
 
-      console.log(e.point.x, e.point.z);
-
-      const result = convertWorldCoordsToCorrectedCoords(e.point.x, e.point.z);
+      const result = convertWorldCoordsToCorrectedCoords(position.x, position.z);
+      // const result = convertWorldCoordsToCorrectedCoords(e.point.x, e.point.z);
 
       if (!result) {
         setCurrStoneWorld(null);
