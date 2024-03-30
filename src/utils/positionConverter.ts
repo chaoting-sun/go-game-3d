@@ -1,11 +1,12 @@
 import { useCallback } from 'react';
-import { useThree } from '@react-three/fiber';
+import { ThreeEvent, useThree } from '@react-three/fiber';
 import * as THREE from 'three';
+import { STONE_Y } from '../goGame/appearance/constants';
 
-function useFixedYPositionConverter(y: number) {
+function useFixedYPositionConverter() {
   const { camera } = useThree();
 
-  const getPosition = useCallback((event: React.PointerEvent) => {
+  const getPosition = useCallback((event: ThreeEvent<PointerEvent>) => {
     const pointer = new THREE.Vector2();
     pointer.x = (event.clientX / window.innerWidth) * 2 - 1;
     pointer.y = -(event.clientY / window.innerHeight) * 2 + 1;
@@ -19,12 +20,12 @@ function useFixedYPositionConverter(y: number) {
     const dir = raycaster.ray.direction;
     const camPos = camera.position;
 
-    const t = (y - camPos.y) / dir.y;
+    const t = (STONE_Y - camPos.y) / dir.y;
     const x = camPos.x + t * dir.x;
     const z = camPos.z + t * dir.z;
 
-    return { x, y, z };
-  }, [camera, y]);
+    return { x, STONE_Y, z };
+  }, [camera]);
 
   return getPosition;
 }

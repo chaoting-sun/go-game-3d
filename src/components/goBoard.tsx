@@ -1,6 +1,7 @@
 import * as THREE from "three";
 import { useThree } from '@react-three/fiber';
 import { useState } from "react";
+import { BOARD_HEIGHT, BOARD_WIDTH } from "../goGame/appearance/constants";
 
 const GoBoard = ({ position, topTexture, boardTexture, PlaceStone }) => {
 
@@ -20,7 +21,7 @@ const GoBoard = ({ position, topTexture, boardTexture, PlaceStone }) => {
       position={position}
       onClick={PlaceStone}
     >
-      <boxGeometry attach="geometry" args={[10, 2, 10]} />
+      <boxGeometry attach="geometry" args={[BOARD_WIDTH, BOARD_HEIGHT, BOARD_WIDTH]} />
       {materials.map((material, index) => (
         <primitive key={index} attach={`material-${index}`} object={material} />
       ))}

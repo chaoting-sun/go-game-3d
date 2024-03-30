@@ -1,13 +1,9 @@
+import { CellState } from "../goGame/logics/types";
+
 type BoardCoordinates = {
   x: number;
   z: number;
 };
-
-enum CellState {
-  Empty = -1,
-  White = 0,
-  Black = 1,
-}
 
 type StonePlacement = {
   coordinates: BoardCoordinates;
