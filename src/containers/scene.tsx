@@ -1,5 +1,5 @@
 import { Canvas } from "@react-three/fiber";
-import GoGame from "../components/goGame";
+import GoGame from "./goGame";
 import { Stats, OrbitControls } from "@react-three/drei";
 import React, { useCallback, useRef } from "react";
 
