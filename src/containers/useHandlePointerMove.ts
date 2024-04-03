@@ -21,10 +21,13 @@ const useDebouncedPointerMove = (
       console.log("handlePointerMove");
 
       const position = positionConverter(e);
+
       const result = convertWorldCoordsToCorrectedCoords(
         position.x,
         position.z
       );
+
+      console.log("result:", result);
 
       if (!result) {
         setCurrStoneWorld(null);

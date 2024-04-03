@@ -3,7 +3,7 @@ import { ThreeEvent, useThree } from '@react-three/fiber';
 import * as THREE from 'three';
 import { STONE_Y } from '../goGame/appearance/constants';
 
-function useFixedYPositionConverter(refId="scene") {
+function useFixedYPositionConverter(refId="scene-container") {
   const { camera } = useThree();
 
   const getPosition = useCallback((event: ThreeEvent<PointerEvent>) => {

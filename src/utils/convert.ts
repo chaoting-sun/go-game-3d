@@ -23,9 +23,6 @@ export const convertWorldCoordsToCorrectedCoords = (
 ): ConvertWorldCoordsToCorrectedCoords => {
   const WorldHalfSpaceDistance = WorldOneSpaceDistance / 2;
 
-  // console.log("xWorld:", xWorld);
-  // console.log("zWorld:", zWorld);
-
   // check if the world position is within the board
 
   if (

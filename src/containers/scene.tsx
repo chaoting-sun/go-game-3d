@@ -1,11 +1,15 @@
 import { Canvas } from "@react-three/fiber";
 import GoGame from "./goGame";
 import { Stats, OrbitControls } from "@react-three/drei";
-import React, { useCallback, useRef } from "react";
+import React, { useCallback, useEffect, useRef } from "react";
 
 const Scene: React.FC = () => {
   const placingRef = useRef(false);
   const clickStartRef = useRef({ x: 0, z: 0 });
+
+  useEffect(() => {
+  }, []);
+
 
   const handleMouseDown = useCallback((e) => {
     clickStartRef.current = { x: e.clientX, z: e.clientY };
@@ -21,9 +25,12 @@ const Scene: React.FC = () => {
     }
   }, []);
 
+
+
   return (
     <Canvas
-      className="bg-gray-900"
+      className="bg-[#353d57]"
+      style={{ width: "100%", height: "100%" }}
       onPointerDown={handleMouseDown}
       onPointerUp={handleMouseUp}
       shadows
@@ -34,7 +41,6 @@ const Scene: React.FC = () => {
         position: [4, 8, 10],
       }}
     >
-      {/* <ambientLight /> */}
       <spotLight
         position={[0, 20, 0]}
         angle={Math.PI / 8}
@@ -43,10 +49,9 @@ const Scene: React.FC = () => {
         castShadow
       />
       <GoGame position={[0, 1, 0]} placingRef={placingRef} />
-      {/* <InfiniteFloor position={[0, 0, -1]} /> */}
       <OrbitControls makeDefault />
       <axesHelper args={[20]} />
-      <Stats />
+      {/* <Stats /> */}
     </Canvas>
   );
 };
