@@ -16,7 +16,7 @@ This is a 3D go game implemented by three.js. Welcome for giving me some advices
 - [x] 3D view of board and stones
 - [x] Go game logic
 - [x] Game page
-- [x] play game based on sgf files
+- [x] Play game based on sgf files
 - [ ] Team page
 - [ ] Activity page
 - [ ] Authentication
