@@ -1,6 +1,5 @@
 #!/usr/bin/bash
 # 
-# source: https://gist.github.com/Chewt/c4a89bf1d54f27bf7e087a852b4610f9
 # This program will download all games on online-go.com for a specified user
 
 BASE='https://online-go.com/'
