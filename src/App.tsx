@@ -1,16 +1,33 @@
 import Scene from "./containers/scene";
 import NavBar from "./containers/navBar";
 import PlayerBlock from "./components/playerBlock";
+import { useState } from "react";
 
 const App = () => {
+  const [player1, setPlayer1] = useState({
+    name: "Chaoting Sun",
+    photo: "/players/chaoting-sun.jpg",
+    rank: "1k",
+    captures: 2,
+    stoneColor: "white",
+  });
+  const [player2, setPlayer2] = useState({
+    name: "Peter Pan",
+    photo: "/players/peter-pan.png",
+    rank: "2k",
+    captures: 8,
+    stoneColor: "black",
+  });
+
   return (
     <div className="flex flex-col h-screen">
-      <NavBar />
+      <NavBar user={player1} />
       <main className="grow grid grid-cols-1 sm:grid-cols-[1fr,200px] md:grid-cols-[1fr,400px] lg:grid-cols-[1fr,600px] lg:grid-rows-1 gap-[2px] bg-[#242838]">
         {/* board */}
-        <div id="scene-container" className="min-w-0 min-h-0">
+        <div className="grid grid-cols-1 grid-rows-[1fr,100px] bg-[#353d57]">
           <Scene />
         </div>
+
         {/* player */}
         <div
           id="player-container"
@@ -18,20 +35,8 @@ const App = () => {
         >
           {/* player block */}
           <div className="grid grid-rows-2 grid-cols-1 lg:grid-rows-1 lg:grid-cols-2 gap-4 m-4">
-            <PlayerBlock
-              name="Peter Pan"
-              photo="/test-icon.png"
-              rank="2k"
-              captures={8}
-              stoneColor="black"
-            />
-            <PlayerBlock
-              name="Chaoting Sun"
-              photo="/test-icon.png"
-              rank="1k"
-              captures={2}
-              stoneColor="white"
-            />
+            <PlayerBlock player={player1} captures={8} />
+            <PlayerBlock player={player2} captures={1} />
           </div>
           {/* chat box */}
           <div className="rounded-2xl bg-[#4a587f] grid grid-rows-[1fr,120px] md:grid-rows-[1fr,60px] m-4">

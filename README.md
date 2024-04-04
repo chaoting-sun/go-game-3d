@@ -2,7 +2,7 @@
 
 This is a 3D go game implemented by three.js. Welcome for giving me some advices!
 
-![a 3D go game](./photos/3d-board.png)
+![a 3D go game](./photos/go-game.gif)
 
 # Rules
 

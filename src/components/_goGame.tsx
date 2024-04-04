@@ -49,8 +49,8 @@ const GoGame: React.FC<GoGameProps> = ({ position, placingRef }) => {
   const getPosition = useFixedYPositionConverter();
 
   const [topTexture, boardTexture] = useLoader(THREE.TextureLoader, [
-    "/go-board.svg",
-    "/board-material.png",
+    "/board/cells.svg",
+    "/board/material.png",
   ]);
 
   const handlePointerOut = () => {

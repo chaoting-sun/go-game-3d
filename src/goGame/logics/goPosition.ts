@@ -3,26 +3,30 @@ import { CellState, StoneColor } from "./types";
 import { EMPTY_BOARD, N } from "./constants"; // Import necessary utilities and constants
 import { placeStone, isKoish, bulkPlaceStones, swapColors } from "./utils";
 
-export class Position {
+export class GoPosition {
   board: string;
   ko: number | null;
+  step: number;
   libertyTracker: LibertyTracker;
 
   constructor(
     board: string,
     ko: number | null,
+    step: number,
     libertyTracker: LibertyTracker
   ) {
     this.board = board;
     this.ko = ko;
+    this.step = step;
     this.libertyTracker = libertyTracker;
   }
 
-  static initial_state(): Position {
+  static initial_state(): GoPosition {
     // Assuming LibertyTracker.fromBoard is a static method that accepts a board and returns a LibertyTracker instance
-    return new Position(
+    return new GoPosition(
       EMPTY_BOARD,
       null,
+      0,
       LibertyTracker.fromBoard(EMPTY_BOARD)
     );
   }
@@ -43,7 +47,7 @@ export class Position {
     return this.board[fc] === CellState.Empty;
   }
 
-  playMove(fc: number, color: StoneColor): Position {
+  playMove(fc: number, color: StoneColor): GoPosition {
     console.log("playMove", fc, color);
 
     if (fc === this.ko) {
@@ -54,11 +58,11 @@ export class Position {
       throw new Error(`Stone exists at ${fc}.`);
     }
 
-    console.log("is koish")
+    console.log("is koish");
 
     const possibleKoColor = isKoish(this.board, fc);
 
-    console.log("new board")
+    console.log("new board");
 
     const newBoard = placeStone(color, this.board, fc);
 
@@ -82,7 +86,12 @@ export class Position {
       newKo = [...capturedStones][0];
     }
 
-    return new Position(updatedBoard, newKo, newLibertyTracker);
+    return new GoPosition(
+      updatedBoard,
+      newKo,
+      this.step + 1,
+      newLibertyTracker
+    );
   }
 
   score(): number {

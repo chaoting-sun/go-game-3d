@@ -5,14 +5,14 @@ import GoStone from "../components/goStone.tsx";
 import GoStonePreview from "../components/goStonePreview.tsx";
 import GoBoard from "../components/goBoard.tsx";
 import { CellState } from "../utils/goBoardState.ts";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   convertWorldCoordsToCorrectedCoords,
   worldLB,
   WorldOneSpaceDistance,
 } from "../utils/convert.ts";
 import useDebouncedPointerMove from "./useHandlePointerMove.ts";
-import { Position } from "../goGame/logics/position.ts";
+import { GoPosition } from "../goGame/logics/goPosition.ts";
 import { STONE_Y, FOOT_X, FOOT_Z } from "../goGame/appearance/constants.ts";
 import { N } from "../goGame/logics/constants.ts";
 import { StoneColor } from "../goGame/logics/types.ts";
@@ -22,23 +22,51 @@ type CurrCellStoneWorld = {
   zWorld: number;
 } | null;
 
-type GoGameProps = {
+type GoViewProps = {
   position: [number, number, number];
   placingRef: React.MutableRefObject<boolean>;
+  goRecords: { rowi: number; coli: number }[];
+  step: number;
 };
 
-const GoGame: React.FC<GoGameProps> = ({ position, placingRef }) => {
+const GoView: React.FC<GoViewProps> = ({
+  position,
+  placingRef,
+  goRecords,
+  step,
+}) => {
   const [currStoneWorld, setCurrStoneWorld] =
     useState<CurrCellStoneWorld>(null);
   const [turn, setTurn] = useState<StoneColor>(CellState.Black);
-  const [goPosition, setGoPosition] = useState<Position>(
-    Position.initial_state()
+  const [goPosition, setGoPosition] = useState<GoPosition>(
+    GoPosition.initial_state()
   );
+  const [allGoBoards, setAllGoBoards] = useState<string[]>([]);
 
   const [topTexture, boardTexture] = useLoader(THREE.TextureLoader, [
-    "/go-board.svg",
-    "/board-material.png",
+    "/board/cells.svg",
+    "/board/material.png",
   ]);
+
+  // update goPosition and allGoBoards
+
+  useEffect(() => {
+    if (!goRecords || allGoBoards.length !== 0) {
+      return;
+    }
+
+    let currGoPosition = GoPosition.initial_state();
+    const newAllGoBoards = [];
+    for (let i = 0; i < goRecords.length; i++) {
+      const fc = goRecords[i].coli + goRecords[i].rowi * N;
+      currGoPosition =
+        i % 2 === 0
+          ? currGoPosition.playMove(fc, CellState.Black)
+          : currGoPosition.playMove(fc, CellState.White);
+      newAllGoBoards.push(currGoPosition.getBoard());
+    }
+    setAllGoBoards(newAllGoBoards);
+  }, [allGoBoards, goRecords, goPosition]);
 
   const debouncedHandlePointerMove = useDebouncedPointerMove(
     goPosition,
@@ -76,20 +104,17 @@ const GoGame: React.FC<GoGameProps> = ({ position, placingRef }) => {
       setGoPosition(newGoPosition);
       setTurn(turn === CellState.Black ? CellState.White : CellState.Black);
 
-      // setStones((stones) => [
-      //   ...stones,
-      //   {
-      //     xBoard: correctedBoard.x,
-      //     zBoard: correctedBoard.z,
-      //     color: CellState.Black ? CellState.Black : CellState.White,
-      //   },
-      // ]);
-
       // update the board state
 
       placingRef.current = false;
     }
   };
+
+  if (allGoBoards && allGoBoards.length && step >= 0) {
+    console.log("all go boards:", Array.from(allGoBoards[step]));
+  }
+
+  console.log("step:", step);
 
   return (
     <group
@@ -109,24 +134,27 @@ const GoGame: React.FC<GoGameProps> = ({ position, placingRef }) => {
       <BoardFoot position={[FOOT_X, 0, -FOOT_Z]} texture={boardTexture} />
       <BoardFoot position={[FOOT_X, 0, FOOT_Z]} texture={boardTexture} />
       {/* stones */}
-      {Array.from(goPosition.getBoard()).map((cell, index) => {
-        const color = cell === CellState.White ? "white" : "black";
-        if (cell === CellState.Empty) {
-          return null;
-        }
-        const x = index % N;
-        const z = Math.floor(index / N);
-        const xWorld = worldLB + x * WorldOneSpaceDistance;
-        const zWorld = worldLB + z * WorldOneSpaceDistance;
+      {allGoBoards.length &&
+        step >= 0 &&
+        Array.from(allGoBoards[step]).map((cell, index) => {
+          // {Array.from(goPosition.getBoard()).map((cell, index) => {
+          const color = cell === CellState.White ? "white" : "black";
+          if (cell === CellState.Empty) {
+            return null;
+          }
+          const x = index % N;
+          const z = Math.floor(index / N);
+          const xWorld = worldLB + x * WorldOneSpaceDistance;
+          const zWorld = worldLB + z * WorldOneSpaceDistance;
 
-        return (
-          <GoStone
-            key={index}
-            position={[xWorld, STONE_Y, zWorld]}
-            color={color}
-          />
-        );
-      })}
+          return (
+            <GoStone
+              key={index}
+              position={[xWorld, STONE_Y, zWorld]}
+              color={color}
+            />
+          );
+        })}
       {/* current stone */}
       {currStoneWorld && (
         <GoStonePreview
@@ -139,4 +167,4 @@ const GoGame: React.FC<GoGameProps> = ({ position, placingRef }) => {
   );
 };
 
-export default GoGame;
+export default GoView;

@@ -2,7 +2,7 @@
 import { useCallback, useEffect, useRef, useMemo } from "react";
 import { debounce } from "lodash";
 import { ThreeEvent } from "@react-three/fiber";
-import { Position } from "../goGame/logics/position";
+import { Position } from "../goGame/logics/goPosition";
 import { convertWorldCoordsToCorrectedCoords } from "../utils/convert";
 import useFixedYPositionConverter from "../utils/positionConverter";
 
